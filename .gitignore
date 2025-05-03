@@ -1,0 +1,10 @@
+build/
+.dart_tool/
+.packages
+.idea/
+.flutter-plugins
+.flutter-plugins-dependencies
+.melos_tool/
+android/.gradle
+ios/Pods
+*.iml
