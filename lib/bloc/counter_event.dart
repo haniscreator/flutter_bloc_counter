@@ -1,3 +1,6 @@
+// lib/bloc/counter_event.dart
 abstract class CounterEvent {}
 
-class Increment extends CounterEvent {}
+class CounterIncrementPressed extends CounterEvent {}
+
+class CounterDecrementPressed extends CounterEvent {}

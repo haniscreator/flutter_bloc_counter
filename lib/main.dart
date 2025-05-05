@@ -1,48 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'bloc/counter_bloc.dart';
 import 'bloc/counter_event.dart';
 import 'bloc/counter_state.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory(),
+  );
+  HydratedBloc.storage = storage;
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter BLoC Counter',
+      title: 'Hydrated BLoC Counter',
       home: BlocProvider(
         create: (_) => CounterBloc(),
-        child: const CounterPage(),
+        child: CounterPage(),
       ),
     );
   }
 }
 
 class CounterPage extends StatelessWidget {
-  const CounterPage({super.key});
-
   @override
   Widget build(BuildContext context) {
+    final counterBloc = context.read<CounterBloc>();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('BLoC Counter')),
+      appBar: AppBar(title: Text('Hydrated BLoC Counter')),
       body: Center(
         child: BlocBuilder<CounterBloc, CounterState>(
           builder: (context, state) {
-            return Text('Counter: ${state.count}',
-                style: const TextStyle(fontSize: 30));
+            return Text(
+              '${state.value}',
+              style: TextStyle(fontSize: 40),
+            );
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<CounterBloc>().add(Increment());
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'decrement',
+            onPressed: () => counterBloc.add(CounterDecrementPressed()),
+            child: Icon(Icons.remove),
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+            heroTag: 'increment',
+            onPressed: () => counterBloc.add(CounterIncrementPressed()),
+            child: Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
