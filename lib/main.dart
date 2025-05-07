@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'bloc/counter_bloc.dart';
 import 'bloc/counter_event.dart';
 import 'bloc/counter_state.dart';
+import 'widgets/counter_buttons.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,22 +48,7 @@ class CounterPage extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'decrement',
-            onPressed: () => counterBloc.add(CounterDecrementPressed()),
-            child: Icon(Icons.remove),
-          ),
-          SizedBox(width: 10),
-          FloatingActionButton(
-            heroTag: 'increment',
-            onPressed: () => counterBloc.add(CounterIncrementPressed()),
-            child: Icon(Icons.add),
-          ),
-        ],
-      ),
+      floatingActionButton: CounterButtons(),
     );
   }
 }
